@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E759F9E6-B220-46D8-B4A4-E2C84CB5CD18}"
+	ProjectSection(SolutionItems) = preProject
+		src\docker-compose.yml = src\docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E211E1B1-08DD-4FA3-9F37-25C7142480E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuggestionApp.UI", "src\SuggestionApp.UI\SuggestionApp.UI.csproj", "{BB499A4D-12B7-4F8C-8E08-1438CBFBCDE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuggestionApp.Library", "src\SuggestionApp.Library\SuggestionApp.Library.csproj", "{BBAA6646-0627-4432-927B-A0D999A54ADF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BB499A4D-12B7-4F8C-8E08-1438CBFBCDE1} = {E759F9E6-B220-46D8-B4A4-E2C84CB5CD18}
+		{BBAA6646-0627-4432-927B-A0D999A54ADF} = {E759F9E6-B220-46D8-B4A4-E2C84CB5CD18}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BB499A4D-12B7-4F8C-8E08-1438CBFBCDE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB499A4D-12B7-4F8C-8E08-1438CBFBCDE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB499A4D-12B7-4F8C-8E08-1438CBFBCDE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB499A4D-12B7-4F8C-8E08-1438CBFBCDE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBAA6646-0627-4432-927B-A0D999A54ADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBAA6646-0627-4432-927B-A0D999A54ADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBAA6646-0627-4432-927B-A0D999A54ADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBAA6646-0627-4432-927B-A0D999A54ADF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
