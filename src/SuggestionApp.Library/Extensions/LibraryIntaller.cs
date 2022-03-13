@@ -11,6 +11,7 @@ public static class LibraryIntaller
         services.AddSingleton<IDataStore>(new DataStore(settings));
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ISuggestionRepository, SuggestionRepository>();
         return services;
     }
 }

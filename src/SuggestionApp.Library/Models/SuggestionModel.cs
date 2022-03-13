@@ -19,7 +19,7 @@ public class SuggestionModel
 
     public string Author { get; set; } = string.Empty;
 
-    public ISet<string> UserVoter { get; set; } = new HashSet<string>();
+    public ISet<string> UserVotes { get; set; } = new HashSet<string>();
 
     public StatusModel? Status { get; set; }
 

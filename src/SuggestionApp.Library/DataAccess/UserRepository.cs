@@ -32,8 +32,6 @@ internal class UserRepository : IUserRepository
 
     public async Task UpdateUser(UserModel user)
     {
-        var filter = Builders<UserModel>.Filter.Eq(u => u.Id, user.Id);
-
-        await _userCollection.ReplaceOneAsync(filter, user, new ReplaceOptions { IsUpsert = true });
+        await _userCollection.ReplaceOneAsync(u => u.Id == user.Id, user, new ReplaceOptions { IsUpsert = true });
     }
 }
