@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SuggestionApp.Library.Models.Simplified;
 
 namespace SuggestionApp.Library.Models;
 
@@ -17,7 +18,7 @@ public class SuggestionModel
 
     public CategoryModel? Category { get; set; }
 
-    public string Author { get; set; } = string.Empty;
+    public BasicUserModel Author { get; set; } = new BasicUserModel();
 
     public ISet<string> UserVotes { get; set; } = new HashSet<string>();
 

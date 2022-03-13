@@ -12,6 +12,7 @@ internal interface ISuggestionRepository
 
     Task<IEnumerable<SuggestionModel>> GetSuggestionsWaitingForApproval();
 
+    Task CreateSuggestion(SuggestionModel suggestion);
     Task UpdateSuggestion(SuggestionModel suggestion);
 
     void InvalidateCache();

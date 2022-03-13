@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Caching.Memory;
 using MongoDB.Driver;
+using SuggestionApp.Library.Extensions;
 using SuggestionApp.Library.Interfaces;
 using SuggestionApp.Library.Models;
 
@@ -9,12 +10,14 @@ internal class SuggestionRepository : ISuggestionRepository
 {
     private const string SuggestionCacheKey = "4MlBL0zY8TN6l4eGO013clSoJGhaej73ROh";
     private readonly IMemoryCache _cache;
+    private readonly IDataStore _store;
     private readonly IUserRepository _userRepository;
     private readonly IMongoCollection<SuggestionModel> _suggestionCollection;
 
     public SuggestionRepository(IDataStore store, IUserRepository userRepository, IMemoryCache cache)
     {
         _suggestionCollection = store.Suggestions;
+        _store = store;
         _userRepository = userRepository;
         _cache = cache;
     }
@@ -52,10 +55,22 @@ internal class SuggestionRepository : ISuggestionRepository
         return suggestions.Where(s => !s.ApprovedForRelease && !s.Rejected).ToList();
     }
 
+    public async Task CreateSuggestion(SuggestionModel suggestion)
+    {
+        await _store.ExecuteScoped(
+            async scopedStore => {
+                await scopedStore.Suggestions.InsertOneAsync(suggestion);
+                var user = await _userRepository.GetUser(suggestion.Author.Id);
+                user.AuthoredSuggestions.Add(suggestion.ToBasicModel());
+                await scopedStore.Users.ReplaceOneAsync(u => u.Id == user.Id, user);
+            }
+        );
+    }
+
     public async Task UpdateSuggestion(SuggestionModel suggestion)
     {
         await _suggestionCollection.ReplaceOneAsync(s => s.Id == suggestion.Id, suggestion);
-        _cache.Remove(SuggestionCacheKey);
+        InvalidateCache();
     }
 
     public void InvalidateCache()

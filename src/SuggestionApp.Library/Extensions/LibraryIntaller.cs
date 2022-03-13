@@ -12,6 +12,7 @@ public static class LibraryIntaller
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ISuggestionRepository, SuggestionRepository>();
+        services.AddScoped<ISuggestionService, SuggestionService>();
         return services;
     }
 }

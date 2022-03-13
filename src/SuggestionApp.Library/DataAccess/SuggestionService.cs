@@ -5,7 +5,7 @@ using SuggestionApp.Library.Models;
 
 namespace SuggestionApp.Library.DataAccess;
 
-internal class SuggestionService
+internal class SuggestionService : ISuggestionService
 {
     private readonly IDataStore _store;
     private readonly ISuggestionRepository _suggestionRepository;
