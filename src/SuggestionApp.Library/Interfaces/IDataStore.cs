@@ -3,7 +3,7 @@ using SuggestionApp.Library.Models;
 
 namespace SuggestionApp.Library.Interfaces;
 
-public interface IDataStore
+internal interface IDataStore
 {
     IMongoCollection<CategoryModel> Categories { get; }
 
