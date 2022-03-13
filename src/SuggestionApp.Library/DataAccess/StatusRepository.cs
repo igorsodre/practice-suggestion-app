@@ -5,7 +5,7 @@ using SuggestionApp.Library.Models;
 
 namespace SuggestionApp.Library.DataAccess;
 
-public class StatusRepository : IStatusRepository
+internal class StatusRepository : IStatusRepository
 {
     private const string StatusCacheKey = "e23alRTUsHjzJNT1I4IYudNkvpcdcdmgs1K";
     private readonly IMemoryCache _cache;

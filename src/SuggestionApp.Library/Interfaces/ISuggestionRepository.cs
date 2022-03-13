@@ -2,7 +2,7 @@ using SuggestionApp.Library.Models;
 
 namespace SuggestionApp.Library.Interfaces;
 
-internal interface ISuggestionRepository
+public interface ISuggestionRepository
 {
     Task<IEnumerable<SuggestionModel>> GetSuggestions();
 

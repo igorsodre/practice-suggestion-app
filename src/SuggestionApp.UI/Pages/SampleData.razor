@@ -1,0 +1,47 @@
+@page "/SampleData"
+@using SuggestionApp.Library.Interfaces
+@using SuggestionApp.Library.Models
+@inject ICategoryRepository _categoryRepository
+@inject IStatusRepository _statusRepository
+<h3>Sample Data</h3>
+
+<button disabled="@_categoriesCreated" class="btn btn-primary" @onclick="CreateCategories"> Create categories</button>
+<button disabled="@_statusesCreated" class="btn btn-primary" @onclick="CreateStatuses"> Crteate status </button>
+
+@code {
+
+    private bool _categoriesCreated = false;
+    private bool _statusesCreated = false;
+
+    private async Task CreateCategories()
+    {
+        var categories = await _categoryRepository.GetCategories();
+
+        if (categories.Any())
+        {
+            return;
+        }
+
+        categories = new[] { new CategoryModel { Name = "Courses", Description = "Full paid courses" }, new CategoryModel { Name = "Dev Questions", Description = "Advice on being a developer." }, new CategoryModel { Name = "In-Depth Tutorial", Description = "A deep dive video on how to use a topic." }, new CategoryModel { Name = "10-minute Training", Description = "A quick \"How do I use this? \" video" }, new CategoryModel { Name = "Other", Description = "Any other topics" } };
+
+        await Task.WhenAll(categories.Select(cat => _categoryRepository.CreateCategory(cat)));
+        _categoriesCreated = true;
+    }
+
+    private async Task CreateStatuses()
+    {
+        var statuses = await _statusRepository.GetStatuses();
+
+        if (statuses.Any())
+        {
+            return;
+        }
+
+        statuses = new[] { new StatusModel { Name = "Completed", Decription = "The suggestion was accepted and the corresponding item was created." }, new StatusModel { Name = "Watching", Decription = "The suggestion is interesting. We are watching to see how much interest there is in it." }, new StatusModel { Name = "Upcoming", Decription = "The suggestion was accepted and it will be released soon" }, new StatusModel { Name = "Dismissed", Decription = "The suggestion was not something that we are going to undertake" } };
+
+        await Task.WhenAll(statuses.Select(stat => _statusRepository.CreateStatus(stat)));
+
+        _statusesCreated = true;
+    }
+
+}

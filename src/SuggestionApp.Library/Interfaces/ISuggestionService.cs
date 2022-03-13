@@ -1,6 +1,6 @@
 namespace SuggestionApp.Library.Interfaces;
 
-internal interface ISuggestionService
+public interface ISuggestionService
 {
     Task UpvoteSuggestion(string suggestionId, string userId);
 }

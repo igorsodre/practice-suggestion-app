@@ -2,7 +2,7 @@ using SuggestionApp.Library.Models;
 
 namespace SuggestionApp.Library.Interfaces;
 
-internal interface IUserRepository
+public interface IUserRepository
 {
     Task<UserModel> GetUser(string id);
 

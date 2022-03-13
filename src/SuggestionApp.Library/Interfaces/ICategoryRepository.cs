@@ -2,7 +2,7 @@ using SuggestionApp.Library.Models;
 
 namespace SuggestionApp.Library.Interfaces;
 
-internal interface ICategoryRepository
+public interface ICategoryRepository
 {
     Task<IEnumerable<CategoryModel>> GetCategories();
 
