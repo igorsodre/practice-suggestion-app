@@ -18,7 +18,7 @@ public class SuggestionModel
 
     public CategoryModel? Category { get; set; }
 
-    public BasicUserModel Author { get; set; } = new BasicUserModel();
+    public BasicUserModel Author { get; set; } = new();
 
     public ISet<string> UserVotes { get; set; } = new HashSet<string>();
 

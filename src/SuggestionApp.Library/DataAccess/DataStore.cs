@@ -44,14 +44,15 @@ internal class DataStore : IDataStore
 
     public async Task ExecuteScoped(Func<IDataStore, Task> procedure)
     {
-        var store = new DataStore(_client, _settings);
+        var store = new DataStore(_settings);
         using var session = await store._client.StartSessionAsync();
         try
         {
+            session.StartTransaction();
             await procedure(store);
             await session.CommitTransactionAsync();
         }
-        catch
+        catch(Exception ex)
         {
             await session.AbortTransactionAsync();
             throw;

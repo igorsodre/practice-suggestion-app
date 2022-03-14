@@ -12,6 +12,7 @@
 
 <button disabled="@_categoriesCreated" class="btn btn-primary" @onclick="CreateCategories"> Create categories</button>
 <button disabled="@_statusesCreated" class="btn btn-primary" @onclick="CreateStatuses"> Crteate status </button>
+<button class="btn btn-danger" @onclick="GenerateSampleData"> Crteate status </button>
 
 @code {
 
@@ -20,16 +21,16 @@
 
   private async Task GenerateSampleData()
   {
-    await _userRepository.CreateUser(new UserModel { FirstName = "Test", LastName = "Testing", Email = "email@domain.com", DisplayName = "AnotherTest", ObjectIdentifier = "abc123" });
+    // await _userRepository.CreateUser(new UserModel { FirstName = "Test", LastName = "Testing", Email = "email@domain.com", DisplayName = "AnotherTest", ObjectIdentifier = "abc123" });
 
     var foundUser = await _userRepository.GetUserFromAuthentication("abc123");
 
     var categories = await _categoryRepository.GetCategories();
     var statuses = await _statusRepository.GetStatuses();
 
-    categories = categories.ToList();
-    await _suggestionRepository.CreateSuggestion(new SuggestionModel { Author = foundUser.ToBasicModel(), Category = categories.First(), Title = "The first suggestion", Description = "This is a sample suggestion", });
-    await _suggestionRepository.CreateSuggestion(new SuggestionModel { Author = foundUser.ToBasicModel(), Category = categories.First(), Title = "The Second suggestion", Description = "This is a sample suggestion number 2", Status = statuses.First(), OwnerNotes = "This is just another note"});
+    await _suggestionRepository.CreateSuggestion(new SuggestionModel {ApprovedForRelease = true, Author = foundUser.ToBasicModel(), Category = categories.First(), Title = "The first suggestion", Description = "This is a sample suggestion", });
+    await _suggestionRepository.CreateSuggestion(new SuggestionModel {ApprovedForRelease = true, Author = foundUser.ToBasicModel(), Category = categories.First(), Title = "The Second suggestion", Description = "This is a sample suggestion number 2", Status = statuses.First(), OwnerNotes = "This is just another note" });
+    await _suggestionRepository.CreateSuggestion(new SuggestionModel {ApprovedForRelease = true, Author = foundUser.ToBasicModel(), Category = categories.First(), Title = "The Second suggestion", Description = "This is a sample suggestion number 2", Status = statuses.First(), OwnerNotes = "This is just another note", UserVotes = new HashSet<string>() { "1", "2", "3" } });
   }
 
   private async Task CreateCategories()
