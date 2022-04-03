@@ -1,7 +1,131 @@
 @page "/"
+@using SuggestionApp.Library.Interfaces
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using SuggestionApp.Library.Models
 
-<PageTitle>Index</PageTitle>
+@inject ICategoryRepository _categoryRepository
+@inject IStatusRepository _statusRepository
+@inject ISuggestionRepository _suggestionRepository
+@inject IUserRepository _userRepository
+@inject NavigationManager _navigationManager
+@inject ProtectedSessionStorage _sessionStorage
 
-<h1>Hello, world!</h1>
+@code
+{
+  private List<SuggestionModel> _suggestions = new();
+  private List<CategoryModel> _categories = new();
+  private List<StatusModel> _statuses = new();
+  private string _selectedCategory = "All";
+  private string _selectedStatus = "All";
+  private string _searchText = string.Empty;
+  private bool _isSortedByNew = true;
 
-Welcome to your new app.
+  protected override async Task OnInitializedAsync()
+  {
+    _categories = (await _categoryRepository.GetCategories()).ToList();
+    _statuses = (await _statusRepository.GetStatuses()).ToList();
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
+    {
+      await LoadFilterState();
+      await FilterSuggestions();
+      StateHasChanged();
+    }
+  }
+
+  private async Task LoadFilterState()
+  {
+    var stringResult = await _sessionStorage.GetAsync<string>(nameof(_selectedCategory));
+    _selectedCategory = stringResult.Value ?? "All";
+
+    stringResult = await _sessionStorage.GetAsync<string>(nameof(_selectedStatus));
+    _selectedStatus = stringResult.Value ?? "All";
+
+    stringResult = await _sessionStorage.GetAsync<string>(nameof(_searchText));
+    _searchText = stringResult.Value ?? "";
+
+    var boolResult = await _sessionStorage.GetAsync<bool>(nameof(_isSortedByNew));
+    _isSortedByNew = !boolResult.Success || boolResult.Value;
+  }
+
+  private async Task SaveFilterState()
+  {
+    await _sessionStorage.SetAsync(nameof(_selectedCategory), _selectedCategory);
+    await _sessionStorage.SetAsync(nameof(_selectedStatus), _selectedStatus);
+    await _sessionStorage.SetAsync(nameof(_searchText), _searchText);
+    await _sessionStorage.SetAsync(nameof(_isSortedByNew), _isSortedByNew);
+  }
+
+  private async Task FilterSuggestions()
+  {
+    var output = await _suggestionRepository.GetApprovedSuggestions();
+    if (_selectedCategory != "All")
+    {
+      output = output.Where(x => x.Category?.Name == _selectedCategory);
+    }
+
+    if (_selectedStatus != "All")
+    {
+      output = output.Where(x => x.Status?.Name == _selectedStatus);
+    }
+
+    if (!string.IsNullOrWhiteSpace(_searchText))
+    {
+      output = output.Where(x => x.Description.Contains(_searchText, StringComparison.InvariantCultureIgnoreCase) || x.Title.Contains(_searchText, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    if (_isSortedByNew)
+    {
+      output = output.OrderByDescending(x => x.CreatedAt);
+    }
+    else
+    {
+      output = output.OrderByDescending(x => x.UserVotes.Count).ThenByDescending(x => x.CreatedAt);
+    }
+
+    _suggestions = output.ToList();
+    await SaveFilterState();
+  }
+
+  private async Task OrderByNew(bool isNew)
+  {
+    _isSortedByNew = isNew;
+    await FilterSuggestions();
+  }
+
+  private async Task OnSearchInput(string searchText)
+  {
+    _searchText = searchText;
+    await FilterSuggestions();
+  }
+
+  private async Task OnCategoryClick(string category = "All")
+  {
+    _selectedCategory = category;
+    await FilterSuggestions();
+  }
+
+  private async Task OnStatusClick(string status = "All")
+  {
+    _selectedStatus = status;
+    await FilterSuggestions();
+  }
+
+  private string GetUpvoteTopText(SuggestionModel suggestion)
+  {
+    return suggestion.UserVotes?.Count > 0 ? suggestion.UserVotes.Count.ToString("00") : "Click to";
+  }
+
+  private string GetUpvoteBottomText(SuggestionModel suggestion)
+  {
+    return suggestion.UserVotes?.Count > 1 ? "Upvotes" : "Upvote";
+  }
+
+  private void OpenDetails(SuggestionModel suggestion)
+  {
+    _navigationManager.NavigateTo($"/Details/{suggestion.Id}");
+  }
+}
