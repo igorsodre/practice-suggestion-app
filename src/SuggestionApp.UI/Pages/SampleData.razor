@@ -11,8 +11,8 @@
 <h3>Sample Data</h3>
 
 <button disabled="@_categoriesCreated" class="btn btn-primary" @onclick="CreateCategories"> Create categories</button>
-<button disabled="@_statusesCreated" class="btn btn-primary" @onclick="CreateStatuses"> Crteate status </button>
-<button class="btn btn-danger" @onclick="GenerateSampleData"> Crteate status </button>
+<button disabled="@_statusesCreated" class="btn btn-primary" @onclick="CreateStatuses"> Create status </button>
+<button class="btn btn-danger" @onclick="GenerateSampleData"> Create data </button>
 
 @code {
 
@@ -21,7 +21,7 @@
 
   private async Task GenerateSampleData()
   {
-    // await _userRepository.CreateUser(new UserModel { FirstName = "Test", LastName = "Testing", Email = "email@domain.com", DisplayName = "AnotherTest", ObjectIdentifier = "abc123" });
+    await _userRepository.CreateUser(new UserModel { FirstName = "Test", LastName = "Testing", Email = "email@domain.com", DisplayName = "AnotherTest", ObjectIdentifier = "abc123" });
 
     var foundUser = await _userRepository.GetUserFromAuthentication("abc123");
 

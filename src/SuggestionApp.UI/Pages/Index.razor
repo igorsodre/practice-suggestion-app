@@ -10,6 +10,81 @@
 @inject NavigationManager _navigationManager
 @inject ProtectedSessionStorage _sessionStorage
 
+<h1>Training suggestions</h1>
+<div>
+  <button>Suggest</button>
+</div>
+
+<div>
+  <div>@_suggestions?.Count Suggestions</div>
+  <div>
+    <button @onclick="() => OrderByNew(true)">New</button>
+    <button @onclick="() => OrderByNew(false)">Popular</button>
+  </div>
+
+  <div>
+    <input type="text" placeholder="Search" aria-label="Search box" @oninput="(txt) => OnSearchInput((string)txt.Value ?? string.Empty)" />
+  </div>
+</div>
+<div>
+  <div>
+    @if (_suggestions is not null)
+    {
+      <Virtualize Items="@_suggestions" Context="s" OverscanCount="10">
+        <div>
+          <div>
+            <div>@GetUpvoteTopText(s)</div>
+            <span class="oi oi-caret-top"></span>
+            <div>@GetUpvoteBottomText(s)</div>
+          </div>
+
+          <div>
+            <div @onclick="() => OpenDetails(s)">
+              @s.Description
+            </div>
+            <div @onclick="() => OpenDetails(s)">
+              @s.Category?.Name
+            </div>
+          </div>
+
+          <div>
+            <div>
+              @s.Status?.Name
+            </div>
+          </div>
+        </div>
+      </Virtualize>
+    }
+  </div>
+
+  <div>
+    @if (_categories.Any())
+    {
+      <div>
+        <span>Category</span>
+        <div @onclick="() => OnCategoryClick()">All</div>
+        @foreach (var category in _categories)
+        {
+          <div @onclick="() => OnCategoryClick(category.Name)">@category.Name</div>
+        }
+      </div>
+    }
+
+    @if (_statuses.Any())
+    {
+      <div>
+        <span>Status</span>
+        <div @onclick="() => OnStatusClick()">All</div>
+        @foreach (var status in _statuses)
+        {
+          <div @onclick="() => OnStatusClick(status.Name)">@status.Name</div>
+        }
+      </div>
+    }
+
+  </div>
+</div>
+
 @code
 {
   private List<SuggestionModel> _suggestions = new();
