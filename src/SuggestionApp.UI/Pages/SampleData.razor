@@ -21,7 +21,7 @@
 
   private async Task GenerateSampleData()
   {
-    await _userRepository.CreateUser(new UserModel { FirstName = "Test", LastName = "Testing", Email = "email@domain.com", DisplayName = "AnotherTest", ObjectIdentifier = "abc123" });
+    // await _userRepository.CreateUser(new UserModel { FirstName = "Test", LastName = "Testing", Email = "email@domain.com", DisplayName = "AnotherTest", ObjectIdentifier = "abc123" });
 
     var foundUser = await _userRepository.GetUserFromAuthentication("abc123");
 

@@ -1,0 +1,83 @@
+﻿@page "/Details/{Id}"
+@using SuggestionApp.Library.Interfaces
+@using SuggestionApp.Library.Models
+
+@inject ISuggestionRepository _suggestionRepository
+@inject NavigationManager _navigationManager
+
+<h1>Suggestion Details</h1>
+
+<div>
+  <div>
+    @if (_suggestion is not null)
+    {
+      <div>
+        <div>
+          <div>
+            <div>@GetUpvoteTopText()</div>
+            <span class="oi oi-caret-top"></span>
+            <div>@GetUpvoteBottomText()</div>
+          </div>
+
+          <div>
+            <div>@_suggestion.CreatedAt.ToString("d")</div>
+          </div>
+        </div>
+
+        <div>
+          <div>@_suggestion.Title</div>
+          <div>@_suggestion.Author.DisplayName</div>
+          <div>@_suggestion.Description</div>
+          <div>@_suggestion.Category?.Name</div>
+        </div>
+
+        <div>
+          <button @onclick="ClosePage">Close</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+@if (_suggestion?.Status is not null)
+{
+  <div>
+    <div>
+      <div></div>
+      <div>
+        <div> @_suggestion.Status.Name </div>
+        <div> @((MarkupString)_suggestion.OwnerNotes) </div>
+      </div>
+    </div>
+  </div>
+}
+
+
+@code {
+
+  [Parameter]
+  public string Id { get; set; } = string.Empty;
+
+  private SuggestionModel? _suggestion;
+
+  protected override async Task OnInitializedAsync()
+  {
+    _suggestion = await _suggestionRepository.GetSuggestion(Id);
+  }
+
+  private void ClosePage()
+  {
+    _navigationManager.NavigateTo("/");
+  }
+
+  private string GetUpvoteTopText()
+  {
+    return _suggestion?.UserVotes?.Count > 0 ? _suggestion.UserVotes.Count.ToString("00") : "Click to";
+  }
+
+  private string GetUpvoteBottomText()
+  {
+    return _suggestion?.UserVotes?.Count > 1 ? "Upvotes" : "Upvote";
+  }
+
+}
