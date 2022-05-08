@@ -6,7 +6,7 @@ public interface IUserRepository
 {
     Task<UserModel> GetUser(string id);
 
-    Task<UserModel> GetUserFromAuthentication(string objectId);
+    Task<UserModel?> GetUserFromAuthentication(string objectId);
 
     Task CreateUser(UserModel user);
 

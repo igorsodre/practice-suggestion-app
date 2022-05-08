@@ -17,7 +17,7 @@ internal class CategoryRepository : ICategoryRepository
         _categoryCollection = store.Categories;
     }
 
-    public async Task<IEnumerable<CategoryModel>> GetCategories()
+    public async Task<IList<CategoryModel>> GetCategories()
     {
         var output = _cache.Get<IList<CategoryModel>>(CategoryCacheKey);
         if (output is not null)

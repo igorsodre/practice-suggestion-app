@@ -19,7 +19,7 @@ internal class UserRepository : IUserRepository
         return result.FirstOrDefault();
     }
 
-    public async Task<UserModel> GetUserFromAuthentication(string objectId)
+    public async Task<UserModel?> GetUserFromAuthentication(string objectId)
     {
         var result = await _userCollection.FindAsync(u => u.ObjectIdentifier == objectId);
         return result.FirstOrDefault();

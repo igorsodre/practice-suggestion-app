@@ -64,7 +64,7 @@
 @code {
   private CreateSuggestionModel _suggestionInput = new();
   private IEnumerable<CategoryModel> _categories = new List<CategoryModel>();
-  private UserModel _loggedUser = new();
+  private UserModel? _loggedUser = new();
 
   protected override async Task OnInitializedAsync()
   {
@@ -81,7 +81,7 @@
 
   private async Task CreateSuggestion()
   {
-    if (string.IsNullOrEmpty(_suggestionInput.CategoryId))
+    if (string.IsNullOrEmpty(_suggestionInput.CategoryId) || _loggedUser is null)
     {
       return;
     }

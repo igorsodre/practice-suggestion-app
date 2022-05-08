@@ -23,7 +23,7 @@
   </div>
 
   <div>
-    <input type="text" placeholder="Search" aria-label="Search box" @oninput="(txt) => OnSearchInput((string)txt.Value ?? string.Empty)" />
+    <input type="text" placeholder="Search" aria-label="Search box" @oninput="(txt) => OnSearchInput((string)(txt.Value ?? string.Empty))" />
   </div>
 </div>
 <div>
@@ -139,26 +139,26 @@
     var output = await _suggestionRepository.GetApprovedSuggestions();
     if (_selectedCategory != "All")
     {
-      output = output.Where(x => x.Category?.Name == _selectedCategory);
+      output = output.Where(x => x.Category?.Name == _selectedCategory).ToList();
     }
 
     if (_selectedStatus != "All")
     {
-      output = output.Where(x => x.Status?.Name == _selectedStatus);
+      output = output.Where(x => x.Status?.Name == _selectedStatus).ToList();
     }
 
     if (!string.IsNullOrWhiteSpace(_searchText))
     {
-      output = output.Where(x => x.Description.Contains(_searchText, StringComparison.InvariantCultureIgnoreCase) || x.Title.Contains(_searchText, StringComparison.InvariantCultureIgnoreCase));
+      output = output.Where(x => x.Description.Contains(_searchText, StringComparison.InvariantCultureIgnoreCase) || x.Title.Contains(_searchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
     }
 
     if (_isSortedByNew)
     {
-      output = output.OrderByDescending(x => x.CreatedAt);
+      output = output.OrderByDescending(x => x.CreatedAt).ToList();
     }
     else
     {
-      output = output.OrderByDescending(x => x.UserVotes.Count).ThenByDescending(x => x.CreatedAt);
+      output = output.OrderByDescending(x => x.UserVotes.Count).ThenByDescending(x => x.CreatedAt).ToList();
     }
 
     _suggestions = output.ToList();

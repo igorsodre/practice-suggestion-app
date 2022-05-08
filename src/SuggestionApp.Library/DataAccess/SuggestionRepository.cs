@@ -22,7 +22,7 @@ internal class SuggestionRepository : ISuggestionRepository
         _cache = cache;
     }
 
-    public async Task<IEnumerable<SuggestionModel>> GetSuggestions()
+    public async Task<IList<SuggestionModel>> GetSuggestions()
     {
         var output = _cache.Get<IList<SuggestionModel>>(SuggestionCacheKey);
         if (output is not null)
@@ -38,7 +38,7 @@ internal class SuggestionRepository : ISuggestionRepository
         return result;
     }
 
-    public async Task<IEnumerable<SuggestionModel>> GetApprovedSuggestions()
+    public async Task<IList<SuggestionModel>> GetApprovedSuggestions()
     {
         var suggestions = await GetSuggestions();
         return suggestions.Where(s => s.ApprovedForRelease).ToList();
@@ -49,7 +49,22 @@ internal class SuggestionRepository : ISuggestionRepository
         return await (await _suggestionCollection.FindAsync(s => s.Id == id)).FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<SuggestionModel>> GetSuggestionsWaitingForApproval()
+    public async Task<IList<SuggestionModel>> GetUserSuggestions(string userId)
+    {
+        var output = _cache.Get<List<SuggestionModel>>(userId);
+        if (output is not null)
+        {
+            return output;
+        }
+
+        var query = await _suggestionCollection.FindAsync(s => s.Author.Id == userId);
+        output = await query.ToListAsync();
+        _cache.Set(userId, output, TimeSpan.FromMinutes(1));
+
+        return output;
+    }
+
+    public async Task<IList<SuggestionModel>> GetSuggestionsWaitingForApproval()
     {
         var suggestions = await GetSuggestions();
         return suggestions.Where(s => !s.ApprovedForRelease && !s.Rejected).ToList();

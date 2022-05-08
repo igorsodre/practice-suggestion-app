@@ -4,7 +4,7 @@ namespace SuggestionApp.Library.Interfaces;
 
 public interface ICategoryRepository
 {
-    Task<IEnumerable<CategoryModel>> GetCategories();
+    Task<IList<CategoryModel>> GetCategories();
 
     Task CreateCategory(CategoryModel category);
 }
